@@ -24,9 +24,16 @@ namespace Demo.Games.Domain.Adapters
 
         public Game GetById(string id)
         {
-            var filterId = Builders<Game>.Filter.Eq("Id",ObjectId.Parse(id));
-            return _collection.Find(filterId).FirstOrDefault();
-       
+            try
+            {
+                var filterId = Builders<Game>.Filter.Eq("Id", ObjectId.Parse(id));
+                return _collection.Find(filterId).FirstOrDefault();
+            }
+            catch
+            {
+                return null;
+            }
+
         }
 
         public string Create(string name, string description, DateTimeOffset released, int rating)
@@ -47,19 +54,33 @@ namespace Demo.Games.Domain.Adapters
 
         public bool Update(Game game)
         {
-            var id = game.Id.ToString();
-            var filterId = Builders<Game>.Filter.Eq("Id", ObjectId.Parse(id));
-            var result=_collection.ReplaceOne(filterId, game);
-            return result.ModifiedCount == 1;
+            try
+            {
+                var id = game.Id.ToString();
+                var filterId = Builders<Game>.Filter.Eq("Id", ObjectId.Parse(id));
+                var result = _collection.ReplaceOne(filterId, game);
+                return result.ModifiedCount == 1;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         
 
         public bool Delete(string id)
         {
-            var filterId = Builders<Game>.Filter.Eq("Id", ObjectId.Parse(id));
-            var result = _collection.DeleteOne(filterId);
-            return result.DeletedCount == 1;
+            try
+            {
+                var filterId = Builders<Game>.Filter.Eq("Id", ObjectId.Parse(id));
+                var result = _collection.DeleteOne(filterId);
+                return result.DeletedCount == 1;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
