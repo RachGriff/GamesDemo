@@ -1,39 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.ComponentModel;
+using System.Runtime.Serialization;
 using Demo.Games.Domain.Models;
+using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace Demo.Games.Domain.Adapters
 {
     public class GamesRepository : IGamesRepository
     {
+        private IMongoCollection<Game> _collection;
+        public GamesRepository(IMongoDatabase database)
+        {
+            _collection = database.GetCollection<Game>("Games");
+        }
         public ICollection<Game> GetAll()
         {
-            throw new System.NotImplementedException();
+            var gameCollection = _collection.Find(FilterDefinition<Game>.Empty);
+            return gameCollection.ToList();
         }
 
         public Game GetById(string id)
         {
-            throw new System.NotImplementedException();
+            var filterId = Builders<Game>.Filter.Eq("Id",ObjectId.Parse(id));
+            return _collection.Find(filterId).FirstOrDefault();
+       
         }
 
         public string Create(string name, string description, DateTimeOffset released, int rating)
         {
-            throw new NotImplementedException();
+            var id = ObjectId.GenerateNewId();
+            var newGame = new Game
+            {
+                Id = id,
+                Name = name,
+                Description = description,
+                Released = released,
+                Rating = rating,
+
+            };
+                _collection.InsertOne(newGame);
+                return newGame.Id.ToString();
         }
 
         public bool Update(Game game)
         {
-            throw new NotImplementedException();
+            var id = game.Id.ToString();
+            var filterId = Builders<Game>.Filter.Eq("Id", ObjectId.Parse(id));
+            var result=_collection.ReplaceOne(filterId, game);
+            return result.ModifiedCount == 1;
         }
 
-        public bool Update(string name, string description, DateTimeOffset released, int rating)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public bool Delete(string id)
         {
-            throw new NotImplementedException();
+            var filterId = Builders<Game>.Filter.Eq("Id", ObjectId.Parse(id));
+            var result = _collection.DeleteOne(filterId);
+            return result.DeletedCount == 1;
         }
     }
 }
