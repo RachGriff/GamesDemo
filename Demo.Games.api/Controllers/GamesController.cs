@@ -26,7 +26,7 @@ namespace Demo.Games.API.Controllers
         [HttpGet]
         public ActionResult<ICollection<GameListItem>> Get()
         {
-            return _service.GetAll().Select(g => new GameListItem {Id=g.Id.ToString(), Name=g.Name, Released=g.Released, Rating=g.Rating}).ToList();
+            return _service.GetAll().Select(g => new GameListItem {Id=g.Id.ToString(), Name=g.Name, Released=g.Released.ToString("D"), Rating=g.Rating}).ToList();
         }
 
         // GET api/values/5
@@ -38,7 +38,7 @@ namespace Demo.Games.API.Controllers
             if (game == null) return BadRequest();
             return new GameRepresentation
             {
-                Id = game.Id.ToString(), Name = game.Name, Description = game.Description, Released = game.Released, Rating = game.Rating
+                Id = game.Id.ToString(), Name = game.Name, Description = game.Description, Released = game.Released.ToString("D"), Rating = game.Rating
             };
         }
 
@@ -53,13 +53,27 @@ namespace Demo.Games.API.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public ActionResult <GameRepresentation> Put (string id, [FromBody]string name, string description, DateTimeOffset released, int rating)
+        public ActionResult <GameRepresentation> Put (string id,[FromBody] GameRepresentation gameRepresentation)
         {
-            var game = new Game
-                { Id = new ObjectId(id), Name = name, Description = description, Released = released, Rating = rating};
-            var result = _service.Update(game);
-            if (result == false) return BadRequest();
-            return Ok();
+            if (id != gameRepresentation.Id) return BadRequest();
+            try
+            {
+                var game = new Game
+                {
+                    Id = ObjectId.Parse(gameRepresentation.Id),
+                    Name = gameRepresentation.Name,
+                    Description = gameRepresentation.Description,
+                    Rating = gameRepresentation.Rating,
+                    Released = DateTimeOffset.Parse (gameRepresentation.Released)
+                };
+                var result = _service.Update(game);
+                if (result == false) return BadRequest();
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE api/values/5

@@ -9,7 +9,7 @@ namespace Demo.Games.API.ViewModels
     { 
        public string Id { get; set; }
        public string Name { get; set; }
-       public DateTimeOffset Released { get; set; }
+       public string Released { get; set; }
        public int Rating { get; set; }
     }
 }

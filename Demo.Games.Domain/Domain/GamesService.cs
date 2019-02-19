@@ -34,7 +34,7 @@ namespace Demo.Games.Domain.Domain
         {
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(description) || rating <= 0 ||
                 rating > 5) return null;
-            return _repository.Create(name, description, DateTimeOffset.Now, rating);
+            return _repository.Create(name, description, released, rating);
         }
 
         public bool Update(Game game)
