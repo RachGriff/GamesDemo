@@ -14,7 +14,7 @@ namespace Demo.Games.Domain.Installer
     {
         public static void AddGames(this IServiceCollection services)
         {
-            var connectionString = "mongodb://localhost:27017";
+            var connectionString = "mongodb://rlgriffiths:gamesdemo123@ds123513.mlab.com:23513/gamesdemo";
             var databaseName = "Games";
             var client=new MongoClient(connectionString);
             var database = client.GetDatabase(databaseName);
