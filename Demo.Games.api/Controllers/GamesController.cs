@@ -55,7 +55,7 @@ namespace Demo.Games.API.Controllers
         [HttpPut("{id}")]
         public ActionResult <GameRepresentation> Put (string id,[FromBody] GameRepresentation gameRepresentation)
         {
-            if (id != gameRepresentation.Id) return BadRequest();
+             if (id != gameRepresentation.Id) return BadRequest();
             try
             {
                 var game = new Game

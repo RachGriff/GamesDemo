@@ -33,14 +33,14 @@ namespace Demo.Games.Domain.Domain
         public string Create(string name, string description, DateTimeOffset released, int rating)
         {
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(description) || rating <= 0 ||
-                rating > 5) return null;
+                rating > 10) return null;
             return _repository.Create(name, description, released, rating);
         }
 
         public bool Update(Game game)
         {
             if (string.IsNullOrWhiteSpace(game.Name) || string.IsNullOrWhiteSpace(game.Description) || game.Rating <= 0 ||
-                game.Rating > 5) return false;
+                game.Rating > 10) return false;
             return _repository.Update(game);
         }
 

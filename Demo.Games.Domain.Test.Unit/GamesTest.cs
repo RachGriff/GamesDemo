@@ -138,8 +138,8 @@ namespace Demo.Games.Test
 
         [Test]
         [TestCase(0)]
-        [TestCase(8)]
-        public void when_a_valid_rating_of_between_1_and_5_is_not_provided(int rating)
+        [TestCase(11)]
+        public void when_a_valid_rating_of_between_1_and_10_is_not_provided(int rating)
         {
             var result = _service.Create("", "Its is really great", DateTimeOffset.Now, rating);
 
@@ -262,7 +262,7 @@ namespace Demo.Games.Test
         }
 
         [Test]
-        public void when_a_valid_rating_of_between_1_and5_is_not_provided()
+        public void when_a_valid_rating_of_between_1_and_10_is_not_provided()
         {
             {
                 var id = ObjectId.GenerateNewId();
